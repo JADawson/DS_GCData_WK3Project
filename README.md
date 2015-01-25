@@ -18,6 +18,27 @@ You should create one R script called run_analysis.R that does the following.
 * Appropriately labels the data set with descriptive variable names. 
 * From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
 
+##Overview of the script
+* The code is contained in one script, split into two logical parts.
+* Part 1 deals with downloading the zip file and extracting it's contents.
+* Part 2 loads the data sets and merges them together for aggregates analysis on a subset of the variables.
+* 1) The "features.txt" file which contains the variable names is loaded.
+* 2) The "activity_labels.txt" file which contains the description of the activity_id fields is loaded.
+* 3) The "x_train.txt" file is loaded - this contains the X axis variables from the training set.
+* 4) The "y_train.txt" file is loaded - this contains the Y axis variables from the training set.
+* 5) The "y_subject_train.txt" file is loaded - this contains the IDs of the subject for each row of the two results sets loaded in previous steps.
+* 6) The dataframes from steps 3,4 & 5 are bound together by columns creating one data set with combined contents.
+* 7) Steps 3 to 6 are repeated for the test data sets.
+* 8) The outputs of step 6 & 7 are merged together by rows to create on data set with both the training and test data - df.complete.
+* 9) We limit the variables to include only those which are "mean" or "std" (Standard Deviation) as per the instructions.
+* 9) The activity_description is joined on to the df.complete data set using a sqldf function to add the activity_description field.
+* 10) We set the "key" of the data to be the activity_description and subject_id - meaning we can easily group by these in the next stage to get the summary.
+* 11) lapply is used to create a grouped data frame with the mean of each column by activity_description and subject_id.
+* 12) The resulting data set is exported to a text file called "final.txt" in the working directory.
+
+
+
+##Appendix
 ## My Code - run_analysis.R
 ### Can also be found in the repository.
 
@@ -46,7 +67,7 @@ unzip(destFile, overwrite=TRUE, exdir = "./SmartPhone/Extracted")
 ##PART 2 - Loading the Raw Data, Merging the columns of the test and training sets, binding the rows to get a complete data table.
 ###---------------------------------------------------------------------------
 
-### Load the data table library and the dplyr library
+### Load the data table library and the sqldf library
 library(data.table)
 
 install.packages("sqldf")
