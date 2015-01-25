@@ -20,7 +20,8 @@ You should create one R script called run_analysis.R that does the following.
 
 ## My Code - run_analysis.R
 ### Can also be found in the repository.
-##PART 1 - DOWNLOADING AND EXTRACTING THE DATA
+
+##PART 1 - Downloading and Extracting the Data
 ###---------------------------------------------------------------------------
 
 ### Set the working directory
@@ -42,7 +43,7 @@ if(!file.exists(destFile)){download.file(fileUrl,destfile = destFile)}
 ### Unzip the contents to a new folder
 unzip(destFile, overwrite=TRUE, exdir = "./SmartPhone/Extracted")
 
-##PART 2 - LOADING THE RAW DATA, MERGING THE COLUMNS OF THE TEST AND TRAINING SETS, BINDING THE ROWS TO GET A COMPLETE DATA TABLE
+##PART 2 - Loading the Raw Data, Merging the columns of the test and training sets, binding the rows to get a complete data table.
 ###---------------------------------------------------------------------------
 
 ### Load the data table library and the dplyr library
@@ -83,10 +84,11 @@ dt.complete <- rbind(df.trainbind,df.testbind)
 ### Select only the columns which have either "mean" or "std" in their title
 dt.complete <- dt.complete[,{c(grep("id",names(dt.complete )),grep("mean.",names(dt.complete )),grep("std.",names(dt.complete )))}]
 
-##PART 3 - JOINING THE DATA TOGETHER TO PICK UP THE ACTIVITY DESCRIPTION FROM THE ACTIVITY LABELS TABLE
-##ADDING THE KEYS SO THAT WE CAN GROUP THE RESULT AND APPLY THE MEAN TO GET THE FINAL OUTPUT
+##PART 3 - Joining the data together to pick up the activity description from the activity labels table
+##adding the keys so that we can group the result and apply the mean to get the final output.
+
 ### ---------------------------------------------------------------------------
-### Use the fancy sqldf expression to join on the activity descriptions onto the completed data
+### Use the marvelous sqldf expression to join on the activity descriptions onto the completed data
 dt.complete <- as.data.table(sqldf("SELECT al.activity_description, dt.* 
         FROM [dt.complete] dt  
             INNER JOIN [df.activity_labels] al
@@ -107,3 +109,5 @@ dt.final.names <- as.data.frame(names(dt.final))
 
 ### Export the final table to that it can be uploaded to Coursera
 write.table(dt.final,file="final.txt",row.names=FALSE)
+
+
